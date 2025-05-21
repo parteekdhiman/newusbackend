@@ -31,8 +31,8 @@ router.post('/', async (req, res) => {
         <p><strong>Email:</strong> <a href="mailto:${email}" style="color:#264653;">${email}</a></p>
         <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
         <p><strong>Subject:</strong> ${subject || 'N/A'}</p>
-        <p><strong>Message:</strong></p>
-        <p style="background:#f0f0f0; padding: 1em; border-radius: 5px; white-space: pre-wrap;">${message}</p>
+        <p><strong>Message: ${message}</strong></p>
+        <p style="background:#f0f0f0; padding: 1em; border-radius: 5px; white-space: pre-wrap;"></p>
       </div>
     `;
 
