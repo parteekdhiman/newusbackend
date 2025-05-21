@@ -6,11 +6,11 @@ const cors = require("cors");
 const router = require("./controllers/support");
 app.use(express.json());
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://newustest.netlify.app",
-  "https://newus.in/"
-];
+app.use(cors({
+  origin: 'https://newus.in', 
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 
 app.use(cors({
