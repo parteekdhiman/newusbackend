@@ -4,6 +4,7 @@ const enquri = require("./controllers/enquri");
 const app = express();
 const cors = require("cors");
 const router = require("./controllers/support");
+const inter = require("./controllers/international");
 app.use(express.json());
 
 const allowedOrigins = ["http://localhost:5173", "https://newus.in"];
@@ -21,6 +22,7 @@ app.use(
 );
 app.use("/enquri", enquri);
 app.use("/support-form", router);
+app.use("/send-email",inter)
 app.listen(process.env.PORT || 3000, () => {
   console.log(`server running`);
 });
