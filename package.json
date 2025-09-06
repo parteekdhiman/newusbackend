@@ -5,10 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node index.js",
-    "start": "nodemon index.js",
-    "vercel-build": "echo 'No build step for backend'"
-  },
+  "dev": "nodemon api/index.js",
+  "start": "node api/index.js",
+  "vercel-build": "echo 'No build step for backend'"
+},
+
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
