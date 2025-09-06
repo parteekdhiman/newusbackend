@@ -25,6 +25,28 @@ const transporter = nodemailer.createTransport({
 
 // ------------------ ROUTES ------------------
 
+
+
+app.get("/", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Newus API</title>
+    </head>
+    <body>
+      <h1>🚀 Welcome to Newus API</h1>
+      <p>Endpoints:</p>
+      <ul>
+        <li><a href="/health">/health</a></li>
+        <li><a href="/lead">/lead</a></li>
+      </ul>
+    </body>
+    </html>
+  `);
+});
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Backend server is running ✅" });
