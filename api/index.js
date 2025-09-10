@@ -12,6 +12,7 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
+  'https://newus.in/',
   'https://newus-tau.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000'
