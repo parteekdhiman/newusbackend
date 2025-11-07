@@ -189,7 +189,7 @@ app.post("/api/course-inquiry", async (req, res) => {
       html: `
         <div style="padding:20px;background:#f9fafb;">
           <h2>Hi ${fullName},</h2>
-          <p>Thanks for your interest in <b>${course}</b>. We’ll reach out soon with details.</p>
+          <p>Thanks for your interest in <b>${course}</b>. We'll reach out soon with details.</p>
           <p>Regards,<br/><b>The Newus Team</b></p>
         </div>
       `,
@@ -199,6 +199,95 @@ app.post("/api/course-inquiry", async (req, res) => {
   } catch (err) {
     console.error("Course Inquiry Error:", err);
     res.status(500).json({ ok: false, error: "Inquiry failed" });
+  }
+});
+
+// Registration/Enrollment form
+app.post("/api/register", async (req, res) => {
+  try {
+    const { name, address, contact, email, stream, passout, whatsappNo } = req.body;
+    
+    if (!name || !contact || !email || !whatsappNo) {
+      return res.status(400).json({ ok: false, error: "Missing required fields" });
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ ok: false, error: "Invalid email address" });
+    }
+
+    // Phone validation
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(contact.replace(/[\s\-()]/g, ""))) {
+      return res.status(400).json({ ok: false, error: "Invalid contact number" });
+    }
+
+    const adminMail = {
+      from: `"Newus Registration" <${process.env.EMAIL_USER}>`,
+      to: process.env.ADMIN_EMAIL,
+      subject: `📝 New Registration: ${name}`,
+      html: `
+        <div style="font-family:sans-serif;padding:20px;background:#f9fafb;">
+          <h2>New Registration Received</h2>
+          <div style="background:white;padding:20px;border-radius:8px;margin-top:15px;">
+            <p><b>Name:</b> ${name}</p>
+            <p><b>Email:</b> ${email}</p>
+            <p><b>Contact:</b> ${contact}</p>
+            <p><b>WhatsApp:</b> ${whatsappNo}</p>
+            ${address ? `<p><b>Address:</b> ${address}</p>` : ''}
+            ${stream ? `<p><b>Stream:</b> ${stream}</p>` : ''}
+            ${passout ? `<p><b>Passout Year:</b> ${passout}</p>` : ''}
+          </div>
+          <p style="margin-top:20px;color:#6b7280;font-size:14px;">
+            This is an automated message from the Newus registration form.
+          </p>
+        </div>
+      `,
+    };
+
+    const userMail = {
+      from: `"Newus Team" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "✅ Registration Successful - Welcome to Newus!",
+      html: `
+        <div style="font-family:sans-serif;padding:20px;background:#f9fafb;">
+          <div style="background:white;padding:30px;border-radius:8px;max-width:600px;margin:0 auto;">
+            <h2 style="color:#3b82f6;margin-top:0;">Hi ${name},</h2>
+            <p>Thank you for registering with <b>Newus Dharamshala</b>! 🎉</p>
+            <p>We've received your registration details and our team will get in touch with you shortly.</p>
+            
+            <div style="background:#f0f9ff;padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid #3b82f6;">
+              <p style="margin:0;"><b>What's Next?</b></p>
+              <ul style="margin:10px 0;padding-left:20px;">
+                <li>Our team will review your registration</li>
+                <li>We'll contact you within 24 hours</li>
+                <li>We'll guide you through the enrollment process</li>
+              </ul>
+            </div>
+            
+            <p>If you have any questions, feel free to contact us at:</p>
+            <p>
+              📞 <b>Phone:</b> 86796 86796<br/>
+              📧 <b>Email:</b> newusdharamshala@gmail.com
+            </p>
+            
+            <p style="margin-top:30px;">Best regards,<br/><b>The Newus Team</b></p>
+          </div>
+          <p style="text-align:center;color:#6b7280;font-size:12px;margin-top:20px;">
+            © ${new Date().getFullYear()} Newus Dharamshala. All rights reserved.
+          </p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(adminMail);
+    await transporter.sendMail(userMail);
+
+    res.json({ ok: true, emailSent: true, message: "Registration successful" });
+  } catch (err) {
+    console.error("Registration Error:", err);
+    res.status(500).json({ ok: false, error: "Registration failed" });
   }
 });
 
